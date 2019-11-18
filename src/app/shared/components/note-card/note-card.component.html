@@ -1,0 +1,11 @@
+<nz-card [nzActions]="[actionEdit, actionDelete]" nz-col nzSpan="4">
+    <nz-card-meta [nzTitle]="note.title" [nzDescription]="note.text">
+    </nz-card-meta>
+</nz-card>
+
+<ng-template #actionEdit>
+    <i nz-icon nzType="edit" (click)="onEdit()"></i>
+</ng-template>
+<ng-template #actionDelete>
+    <i nz-icon nzType="delete" (click)="onDelete()"></i>
+</ng-template>
