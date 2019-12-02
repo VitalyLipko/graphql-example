@@ -48,9 +48,20 @@ export class MainPageComponent implements OnInit, OnDestroy {
             note: note,
             type: 'edit'
           },
-          nzCancelText: 'Отмена',
-          nzOkText: 'Сохранить',
-          nzOnOk: modalComponent => this.onSave(modalComponent.noteFormGroup, 'edit')
+          nzClosable: false,
+          nzMaskClosable: false,
+          nzFooter: [
+            {
+              label: 'Отмена',
+              onClick: () => this.modalRef.close()
+            },
+            {
+              label: 'Сохранить',
+              type: 'primary',
+              disabled: modalComponent => !this.isEnabled(modalComponent.noteFormGroup),
+              onClick: modalComponent => this.onSubmit(modalComponent.noteFormGroup, 'edit')
+            }
+          ]
         };
 
         this.modalRef = this.modalService.create(options);
@@ -64,15 +75,26 @@ export class MainPageComponent implements OnInit, OnDestroy {
       nzComponentParams: {
         type: 'new'
       },
-      nzCancelText: 'Отмена',
-      nzOkText: 'Сохранить',
-      nzOnOk: modalComponent => this.onSave(modalComponent.noteFormGroup, 'new')
+      nzClosable: false,
+      nzMaskClosable: false,
+      nzFooter: [
+        {
+          label: 'Отмена',
+          onClick: () => this.modalRef.close()
+        },
+        {
+          label: 'Создать',
+          type: 'primary',
+          disabled: modalComponent => !this.isEnabled(modalComponent.noteFormGroup),
+          onClick: modalComponent => this.onSubmit(modalComponent.noteFormGroup, 'new')
+        }
+      ]
     };
 
     this.modalRef = this.modalService.create(options);
   }
 
-  private onSave(formGroup: FormGroup, type: string) {
+  private onSubmit(formGroup: FormGroup, type: string) {
     let request$ = new Observable<any>();
 
     switch (type) {
@@ -87,11 +109,17 @@ export class MainPageComponent implements OnInit, OnDestroy {
     request$
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(notes => this.notes = notes);
+
+    this.modalRef.close();
   }
 
   onDelete(id: string) {
     this.noteService.deleteNote({ id })
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(notes => this.notes = notes);
+  }
+
+  private isEnabled(formGroup: FormGroup): boolean {
+    return formGroup.controls['title'].value || formGroup.controls['text'].value;
   }
 }

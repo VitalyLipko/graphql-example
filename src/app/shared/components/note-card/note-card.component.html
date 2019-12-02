@@ -1,11 +1,25 @@
-<nz-card [nzActions]="[actionEdit, actionDelete]" nz-col nzSpan="4">
-    <nz-card-meta [nzTitle]="note.title" [nzDescription]="note.text">
-    </nz-card-meta>
+<nz-card 
+    [nzActions]="[actionEdit, actionDelete]" 
+    [nzTitle]="note.title" 
+    [nzHoverable]="true">
+    <p nz-paragraph class="card-content">{{note.text}}</p>
 </nz-card>
 
 <ng-template #actionEdit>
-    <i nz-icon nzType="edit" (click)="onEdit()"></i>
+    <i 
+        nz-icon
+        nzType="edit"
+        nz-tooltip
+        nzTooltipTitle="Редактировать"
+        (click)="onEdit()">
+    </i>
 </ng-template>
 <ng-template #actionDelete>
-    <i nz-icon nzType="delete" (click)="onDelete()"></i>
+    <i 
+        nz-icon
+        nzType="delete"
+        nz-tooltip
+        nzTooltipTitle="Удалить"
+        (click)="onDelete()">
+    </i>
 </ng-template>

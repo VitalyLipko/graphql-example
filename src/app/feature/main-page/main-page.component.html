@@ -2,21 +2,32 @@
     <nz-header>
         <span class="title-wrapper">{{title}}</span>
     </nz-header>
-    <nz-content>
+    <nz-content class="content-container">
         <ng-container *ngIf="!notes || !notes.length">
             <nz-empty nzNotFoundContent="Нет заметок">
             </nz-empty>
         </ng-container>
-        <ng-container *ngIf="notes && notes.length">
-            <ng-container *ngFor="let note of notes">
+        <div *ngIf="notes && notes.length" nz-row [nzGutter]="8">
+            <div
+                *ngFor="let note of notes" 
+                class="card-wrapper"
+                nz-col
+                nzXs="12" nzSm="10" nzMd="8" nzLg="6" nzXl="4">
                 <gql-note-card [note]="note" (edit)="onEdit($event)" (delete)="onDelete($event)">
                 </gql-note-card>
-            </ng-container>
-        </ng-container>
+            </div>
+        </div>
     </nz-content>
 </nz-layout>
 <div class="create-note-container">
-    <button nz-button nzType="primary" nzShape="circle" [nzSize]="'large'" (click)="onCreate()">
+    <button 
+        nz-button
+        nzType="primary"
+        nzShape="circle"
+        nz-tooltip
+        nzTooltipTitle="Создать заметку"
+        [nzSize]="'large'"
+        (click)="onCreate()">
         <i nz-icon nzType="plus"></i>
     </button>
 </div>

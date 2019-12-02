@@ -1,14 +1,18 @@
 <form nz-form [formGroup]="noteFormGroup">
     <nz-form-item>
-        <nz-form-label>Заголовок</nz-form-label>
+        <nz-form-label [nzNoColon]="true">Заголовок</nz-form-label>
         <nz-form-control>
             <input formControlName="title" nz-input />
         </nz-form-control>
     </nz-form-item>
     <nz-form-item>
-        <nz-form-label>Текст</nz-form-label>
+        <nz-form-label [nzNoColon]="true">Текст</nz-form-label>
         <nz-form-control>
-            <textarea formControlName="text" nz-input></textarea>
+            <textarea 
+                formControlName="text"
+                nz-input
+                rows="5">
+            </textarea>
         </nz-form-control>
     </nz-form-item>
 </form>
