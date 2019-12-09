@@ -1,0 +1,39 @@
+query GetNotes {
+    notes {
+        id
+        title
+        text
+    }
+}
+
+query GetNote($id: String!) {
+    note(id: $id) {
+        id
+        title
+        text
+    }
+}
+
+mutation EditNote($id: String!, $title: String, $text: String) {
+    editNote(id: $id, title: $title, text: $text) {
+        id
+        title
+        text
+    }
+}
+
+mutation DeleteNote($id: String!) {
+    deleteNote(id: $id) {
+        id
+        title
+        text
+    }
+}
+
+mutation CreateNote($title: String, $text: String) {
+    createNote(title: $title, text: $text) {
+        id
+        title
+        text
+    }
+}

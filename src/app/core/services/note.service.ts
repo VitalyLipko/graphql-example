@@ -1,90 +1,55 @@
 import { Injectable } from '@angular/core';
-import { Apollo } from 'apollo-angular';
-import gql from 'graphql-tag';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
 import { Note } from '../models/note.model';
+import { GetNotesGQL, GetNoteGQL, EditNoteGQL, CreateNoteGQL, DeleteNoteGQL } from './generated/graphql-example';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NoteService {
 
-  constructor(private apollo: Apollo) { }
+  constructor(
+    private getNotesGQL: GetNotesGQL,
+    private getNoteGQL: GetNoteGQL,
+    private editNoteGQL: EditNoteGQL,
+    private createNoteGQL: CreateNoteGQL,
+    private deleteNoteGQL: DeleteNoteGQL
+  ) { }
 
   getNotes(): Observable<Note[]> {
-    const query = gql`
-      {
-        notes{
-          id
-          title
-          text
-        }
-      }
-    `;
-
-    return this.apollo.query<{ notes: Note[] }>({ query })
-      .pipe(map(res => res.data.notes));
+    return this.getNotesGQL.fetch()
+      .pipe(
+        map(res => res.data.notes as Note[])
+      );
   }
 
   getNote(variables: { id: string }): Observable<Note> {
-    const query = gql`
-      query note($id: String!){
-        note(id: $id) {
-          id
-          title
-          text
-        }
-      }
-    `;
-
-    return this.apollo.query<{ note: Note }>({ query, variables })
-      .pipe(map(res => res.data.note));
+    return this.getNoteGQL.fetch(variables)
+      .pipe(
+        map(res => res.data.note as Note)
+      );
   }
 
   createNote(variables: { title?: string, text?: string }): Observable<Note[]> {
-    const mutation = gql`
-      mutation createNote($title: String, $text: String) {
-        createNote(title: $title, text: $text){
-          id
-          title
-          text
-        }
-      }
-    `;
-
-    return this.apollo.mutate<{ createNote: Note[] }>({ mutation, variables })
-      .pipe(map(res => res.data.createNote));
+    return this.createNoteGQL.mutate(variables)
+      .pipe(
+        map(res => res.data.createNote as Note[])
+      );
   }
 
   editNote(variables: { id: string, title?: string, text?: string }): Observable<Note[]> {
-    const mutation = gql`
-      mutation editNote($id: String!, $title: String, $text: String) {
-        editNote(id: $id, title: $title, text: $text){
-          id
-          title
-          text
-        }
-      }
-    `;
-
-    return this.apollo.mutate<{ editNote: Note[] }>({ mutation, variables })
-      .pipe(map(res => res.data.editNote));
+    return this.editNoteGQL.mutate(variables)
+      .pipe(
+        map(res => res.data.editNote as Note[])
+      );
   }
 
   deleteNote(variables: { id: string }): Observable<Note[]> {
-    const mutation = gql`
-      mutation deleteNote($id: String!) {
-        deleteNote(id: $id){
-          id
-          title
-          text
-        }
-      }
-    `;
-
-    return this.apollo.mutate<{ deleteNote: Note[] }>({ mutation, variables })
-      .pipe(map(res => res.data.deleteNote));
+    return this.deleteNoteGQL.mutate(variables)
+      .pipe(
+        map(res => res.data.deleteNote as Note[])
+      );
   }
 }
