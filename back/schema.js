@@ -2,19 +2,23 @@ const { gql } = require('apollo-server');
 
 exports.typeDefs = gql`
   type Note {
-    id: String!
+    id: ID!
     title: String
     text: String
   }
 
+  type DeletedNote {
+    id: ID
+  }
+
   type Query {
     notes: [Note!]
-    note(id: String!): Note
+    note(id: ID!): Note!
   }
 
   type Mutation {
-    createNote(title: String, text: String): [Note!],
-    editNote(title: String, text: String, id: String!): [Note!],
-    deleteNote(id: String!): [Note!]
+    createNote(title: String, text: String): Note!,
+    editNote(id: ID!, title: String, text: String): Note!,
+    deleteNote(id: ID!): DeletedNote
   }
 `;

@@ -5,8 +5,8 @@ import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { NoteService } from 'src/app/core/services/note.service';
-import { Note } from 'src/app/core/models/note.model';
 import { EditModalComponent } from 'src/app/shared/components/edit-modal/edit-modal.component';
+import { Note } from 'src/app/core/services/generated/graphql-example';
 
 @Component({
   templateUrl: './main-page.component.html',
@@ -108,7 +108,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
 
     request$
       .pipe(takeUntil(this.unsubscribe))
-      .subscribe(notes => this.notes = notes);
+      .subscribe();
 
     this.modalRef.close();
   }
@@ -116,7 +116,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
   onDelete(id: string) {
     this.noteService.deleteNote({ id })
       .pipe(takeUntil(this.unsubscribe))
-      .subscribe(notes => this.notes = notes);
+      .subscribe();
   }
 
   private isEnabled(formGroup: FormGroup): boolean {

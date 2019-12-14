@@ -6,7 +6,7 @@ query GetNotes {
     }
 }
 
-query GetNote($id: String!) {
+query GetNote($id: ID!) {
     note(id: $id) {
         id
         title
@@ -14,7 +14,7 @@ query GetNote($id: String!) {
     }
 }
 
-mutation EditNote($id: String!, $title: String, $text: String) {
+mutation EditNote($id: ID!, $title: String, $text: String) {
     editNote(id: $id, title: $title, text: $text) {
         id
         title
@@ -22,11 +22,9 @@ mutation EditNote($id: String!, $title: String, $text: String) {
     }
 }
 
-mutation DeleteNote($id: String!) {
+mutation DeleteNote($id: ID!) {
     deleteNote(id: $id) {
         id
-        title
-        text
     }
 }
 

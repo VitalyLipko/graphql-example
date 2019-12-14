@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 
-import { Note } from 'src/app/core/models/note.model';
+import { Note } from 'src/app/core/services/generated/graphql-example';
 
 @Component({
   selector: 'gql-edit-modal',

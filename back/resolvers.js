@@ -10,28 +10,29 @@ const resolvers = {
     },
     Mutation: {
         createNote: (parent, args) => {
-            notes.push({ ...args, id: uuidv4() });
+            const note = { ...args, id: uuidv4() };
+            notes.push(note);
 
-            return notes;
+            return note;
         },
         editNote: (parent, args) => {
             const { id, title, text } = args;
-            let editableNote = notes.find(note => note.id === id);
+            let note = notes.find(note => note.id === id);
 
             if (title) {
-                editableNote.title = title;
+                note.title = title;
             }
             if (text) {
-                editableNote.text = text;
+                note.text = text;
             }
 
-            return notes;
+            return note;
         },
         deleteNote: (parents, args) => {
             const index = notes.findIndex(note => note.id === args.id);
-            notes.splice(index, 1);
+            const note = notes.splice(index, 1)[0];
 
-            return notes;
+            return note;
         }
     }
 };

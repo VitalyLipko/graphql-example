@@ -2,8 +2,19 @@ import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
-import { Note } from '../models/note.model';
-import { GetNotesGQL, GetNoteGQL, EditNoteGQL, CreateNoteGQL, DeleteNoteGQL } from './generated/graphql-example';
+import {
+  GetNotesGQL,
+  GetNoteGQL,
+  EditNoteGQL,
+  CreateNoteGQL,
+  DeleteNoteGQL,
+  CreateNoteMutationVariables,
+  GetNoteQueryVariables,
+  EditNoteMutationVariables,
+  DeleteNoteMutationVariables,
+  Note,
+  DeletedNote
+} from './generated/graphql-example';
 
 @Injectable({
   providedIn: 'root'
@@ -19,37 +30,46 @@ export class NoteService {
   ) { }
 
   getNotes(): Observable<Note[]> {
-    return this.getNotesGQL.fetch()
+    return this.getNotesGQL.watch().valueChanges
       .pipe(
-        map(res => res.data.notes as Note[])
+        map(res => res.data.notes)
       );
   }
 
-  getNote(variables: { id: string }): Observable<Note> {
+  getNote(variables: GetNoteQueryVariables): Observable<Note> {
     return this.getNoteGQL.fetch(variables)
       .pipe(
-        map(res => res.data.note as Note)
+        map(res => res.data.note)
       );
   }
 
-  createNote(variables: { title?: string, text?: string }): Observable<Note[]> {
-    return this.createNoteGQL.mutate(variables)
+  createNote(variables: CreateNoteMutationVariables): Observable<Note> {
+    return this.createNoteGQL.mutate(
+      variables,
+      { refetchQueries: [{ query: this.getNotesGQL.document }] }
+    )
       .pipe(
-        map(res => res.data.createNote as Note[])
+        map(res => res.data.createNote)
       );
   }
 
-  editNote(variables: { id: string, title?: string, text?: string }): Observable<Note[]> {
-    return this.editNoteGQL.mutate(variables)
+  editNote(variables: EditNoteMutationVariables): Observable<Note> {
+    return this.editNoteGQL.mutate(
+      variables,
+      { refetchQueries: [{ query: this.getNotesGQL.document }] }
+    )
       .pipe(
-        map(res => res.data.editNote as Note[])
+        map(res => res.data.editNote)
       );
   }
 
-  deleteNote(variables: { id: string }): Observable<Note[]> {
-    return this.deleteNoteGQL.mutate(variables)
+  deleteNote(variables: DeleteNoteMutationVariables): Observable<DeletedNote> {
+    return this.deleteNoteGQL.mutate(
+      variables,
+      { refetchQueries: [{ query: this.getNotesGQL.document }] }
+    )
       .pipe(
-        map(res => res.data.deleteNote as Note[])
+        map(res => res.data.deleteNote)
       );
   }
 }

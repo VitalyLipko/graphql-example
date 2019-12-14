@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
-import { Note } from 'src/app/core/models/note.model';
+
+import { Note } from 'src/app/core/services/generated/graphql-example';
 
 @Component({
   selector: 'gql-note-card',

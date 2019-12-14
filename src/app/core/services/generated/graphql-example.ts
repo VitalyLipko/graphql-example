@@ -21,11 +21,16 @@ export enum CacheControlScope {
   Private = 'PRIVATE'
 }
 
+export type DeletedNote = {
+   __typename?: 'DeletedNote',
+  id?: Maybe<Scalars['ID']>,
+};
+
 export type Mutation = {
    __typename?: 'Mutation',
-  createNote?: Maybe<Array<Note>>,
-  editNote?: Maybe<Array<Note>>,
-  deleteNote?: Maybe<Array<Note>>,
+  createNote: Note,
+  editNote: Note,
+  deleteNote?: Maybe<DeletedNote>,
 };
 
 
@@ -36,19 +41,19 @@ export type MutationCreateNoteArgs = {
 
 
 export type MutationEditNoteArgs = {
+  id: Scalars['ID'],
   title?: Maybe<Scalars['String']>,
-  text?: Maybe<Scalars['String']>,
-  id: Scalars['String']
+  text?: Maybe<Scalars['String']>
 };
 
 
 export type MutationDeleteNoteArgs = {
-  id: Scalars['String']
+  id: Scalars['ID']
 };
 
 export type Note = {
    __typename?: 'Note',
-  id: Scalars['String'],
+  id: Scalars['ID'],
   title?: Maybe<Scalars['String']>,
   text?: Maybe<Scalars['String']>,
 };
@@ -56,12 +61,12 @@ export type Note = {
 export type Query = {
    __typename?: 'Query',
   notes?: Maybe<Array<Note>>,
-  note?: Maybe<Note>,
+  note: Note,
 };
 
 
 export type QueryNoteArgs = {
-  id: Scalars['String']
+  id: Scalars['ID']
 };
 
 
@@ -77,20 +82,20 @@ export type GetNotesQuery = (
 );
 
 export type GetNoteQueryVariables = {
-  id: Scalars['String']
+  id: Scalars['ID']
 };
 
 
 export type GetNoteQuery = (
   { __typename?: 'Query' }
-  & { note: Maybe<(
+  & { note: (
     { __typename?: 'Note' }
     & Pick<Note, 'id' | 'title' | 'text'>
-  )> }
+  ) }
 );
 
 export type EditNoteMutationVariables = {
-  id: Scalars['String'],
+  id: Scalars['ID'],
   title?: Maybe<Scalars['String']>,
   text?: Maybe<Scalars['String']>
 };
@@ -98,23 +103,23 @@ export type EditNoteMutationVariables = {
 
 export type EditNoteMutation = (
   { __typename?: 'Mutation' }
-  & { editNote: Maybe<Array<(
+  & { editNote: (
     { __typename?: 'Note' }
     & Pick<Note, 'id' | 'title' | 'text'>
-  )>> }
+  ) }
 );
 
 export type DeleteNoteMutationVariables = {
-  id: Scalars['String']
+  id: Scalars['ID']
 };
 
 
 export type DeleteNoteMutation = (
   { __typename?: 'Mutation' }
-  & { deleteNote: Maybe<Array<(
-    { __typename?: 'Note' }
-    & Pick<Note, 'id' | 'title' | 'text'>
-  )>> }
+  & { deleteNote: Maybe<(
+    { __typename?: 'DeletedNote' }
+    & Pick<DeletedNote, 'id'>
+  )> }
 );
 
 export type CreateNoteMutationVariables = {
@@ -125,10 +130,10 @@ export type CreateNoteMutationVariables = {
 
 export type CreateNoteMutation = (
   { __typename?: 'Mutation' }
-  & { createNote: Maybe<Array<(
+  & { createNote: (
     { __typename?: 'Note' }
     & Pick<Note, 'id' | 'title' | 'text'>
-  )>> }
+  ) }
 );
 
 
@@ -150,7 +155,7 @@ export const GetNotesDocument = gql`
     
   }
 export const GetNoteDocument = gql`
-    query GetNote($id: String!) {
+    query GetNote($id: ID!) {
   note(id: $id) {
     id
     title
@@ -167,7 +172,7 @@ export const GetNoteDocument = gql`
     
   }
 export const EditNoteDocument = gql`
-    mutation EditNote($id: String!, $title: String, $text: String) {
+    mutation EditNote($id: ID!, $title: String, $text: String) {
   editNote(id: $id, title: $title, text: $text) {
     id
     title
@@ -184,11 +189,9 @@ export const EditNoteDocument = gql`
     
   }
 export const DeleteNoteDocument = gql`
-    mutation DeleteNote($id: String!) {
+    mutation DeleteNote($id: ID!) {
   deleteNote(id: $id) {
     id
-    title
-    text
   }
 }
     `;
