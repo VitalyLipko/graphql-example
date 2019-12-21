@@ -1,5 +1,5 @@
 # source: http://localhost:4000/graphql
-# timestamp: Sat Dec 14 2019 11:45:43 GMT+0700 (GMT+07:00)
+# timestamp: Sun Dec 15 2019 21:54:53 GMT+0700 (GMT+07:00)
 
 directive @cacheControl(maxAge: Int, scope: CacheControlScope) on FIELD_DEFINITION | OBJECT | INTERFACE
 
@@ -9,12 +9,12 @@ enum CacheControlScope {
 }
 
 type DeletedNote {
-  id: ID
+  id: ID!
 }
 
 type Mutation {
   createNote(title: String, text: String): Note!
-  editNote(id: ID!, title: String, text: String): Note!
+  editNote(id: ID!, title: String, text: String): Note
   deleteNote(id: ID!): DeletedNote
 }
 
@@ -26,7 +26,7 @@ type Note {
 
 type Query {
   notes: [Note!]
-  note(id: ID!): Note!
+  note(id: ID!): Note
 }
 
 """The `Upload` scalar type represents a file upload."""

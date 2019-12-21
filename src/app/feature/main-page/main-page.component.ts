@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { NzModalService, NzModalRef, ModalOptionsForService } from 'ng-zorro-antd';
+import { NzModalService, NzModalRef, ModalOptionsForService, NzMessageService } from 'ng-zorro-antd';
 import { FormGroup } from '@angular/forms';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -20,13 +20,16 @@ export class MainPageComponent implements OnInit, OnDestroy {
 
   constructor(
     private noteService: NoteService,
-    private modalService: NzModalService
+    private modalService: NzModalService,
+    private messageService: NzMessageService
   ) { }
 
   ngOnInit() {
     this.noteService.getNotes()
       .pipe(takeUntil(this.unsubscribe))
-      .subscribe(notes => this.notes = notes);
+      .subscribe(notes => this.notes = notes,
+        (error: { messages: string[] }) => error.messages.forEach(message => this.messageService.error(message))
+      );
   }
 
   ngOnDestroy() {
@@ -45,7 +48,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
           nzTitle: 'Редактировать заметку',
           nzContent: EditModalComponent,
           nzComponentParams: {
-            note: note,
+            note,
             type: 'edit'
           },
           nzClosable: false,
@@ -65,7 +68,9 @@ export class MainPageComponent implements OnInit, OnDestroy {
         };
 
         this.modalRef = this.modalService.create(options);
-      });
+      },
+        (error: { messages: string[] }) => error.messages.forEach(message => this.messageService.error(message))
+      );
   }
 
   onCreate() {
@@ -96,30 +101,38 @@ export class MainPageComponent implements OnInit, OnDestroy {
 
   private onSubmit(formGroup: FormGroup, type: string) {
     let request$ = new Observable<any>();
+    let successMessage: string;
 
     switch (type) {
       case 'new':
+        successMessage = 'Заметка создана';
         request$ = this.noteService.createNote(formGroup.value);
         break;
       case 'edit':
+        successMessage = 'Заметка обновлена';
         request$ = this.noteService.editNote(formGroup.value);
         break;
     }
 
     request$
       .pipe(takeUntil(this.unsubscribe))
-      .subscribe();
-
-    this.modalRef.close();
+      .subscribe(() => {
+        this.modalRef.close();
+        this.messageService.success(successMessage);
+      },
+        (error: { messages: string[] }) => error.messages.forEach(message => this.messageService.error(message))
+      );
   }
 
   onDelete(id: string) {
     this.noteService.deleteNote({ id })
       .pipe(takeUntil(this.unsubscribe))
-      .subscribe();
+      .subscribe(() => this.messageService.success('Заметка удалена'),
+        (error: { messages: string[] }) => error.messages.forEach(message => this.messageService.error(message))
+      );
   }
 
   private isEnabled(formGroup: FormGroup): boolean {
-    return formGroup.controls['title'].value || formGroup.controls['text'].value;
+    return formGroup.get('title').value || formGroup.get('text').value;
   }
 }

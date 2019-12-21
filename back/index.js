@@ -4,7 +4,8 @@ const { typeDefs } = require('./schema');
 
 const server = new ApolloServer({
     typeDefs,
-    resolvers
+    resolvers,
+    debug: false
 });
 
 server.listen().then(({ url }) => {

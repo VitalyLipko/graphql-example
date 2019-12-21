@@ -23,13 +23,13 @@ export enum CacheControlScope {
 
 export type DeletedNote = {
    __typename?: 'DeletedNote',
-  id?: Maybe<Scalars['ID']>,
+  id: Scalars['ID'],
 };
 
 export type Mutation = {
    __typename?: 'Mutation',
   createNote: Note,
-  editNote: Note,
+  editNote?: Maybe<Note>,
   deleteNote?: Maybe<DeletedNote>,
 };
 
@@ -61,7 +61,7 @@ export type Note = {
 export type Query = {
    __typename?: 'Query',
   notes?: Maybe<Array<Note>>,
-  note: Note,
+  note?: Maybe<Note>,
 };
 
 
@@ -88,10 +88,10 @@ export type GetNoteQueryVariables = {
 
 export type GetNoteQuery = (
   { __typename?: 'Query' }
-  & { note: (
+  & { note: Maybe<(
     { __typename?: 'Note' }
     & Pick<Note, 'id' | 'title' | 'text'>
-  ) }
+  )> }
 );
 
 export type EditNoteMutationVariables = {
@@ -103,10 +103,10 @@ export type EditNoteMutationVariables = {
 
 export type EditNoteMutation = (
   { __typename?: 'Mutation' }
-  & { editNote: (
+  & { editNote: Maybe<(
     { __typename?: 'Note' }
     & Pick<Note, 'id' | 'title' | 'text'>
-  ) }
+  )> }
 );
 
 export type DeleteNoteMutationVariables = {

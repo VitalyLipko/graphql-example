@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
 
 import {
   GetNotesGQL,
@@ -15,6 +15,20 @@ import {
   Note,
   DeletedNote
 } from './generated/graphql-example';
+import { ApolloError } from 'apollo-client';
+
+function errorHandler() {
+  return (src: Observable<any>) =>
+    src.pipe(
+      catchError((error: ApolloError) => {
+        const messages = error.graphQLErrors
+          ? error.graphQLErrors.map(err => err.message)
+          : [error.networkError.message];
+
+        return throwError({ messages });
+      })
+    );
+}
 
 @Injectable({
   providedIn: 'root'
@@ -39,6 +53,7 @@ export class NoteService {
   getNote(variables: GetNoteQueryVariables): Observable<Note> {
     return this.getNoteGQL.fetch(variables)
       .pipe(
+        errorHandler(),
         map(res => res.data.note)
       );
   }
@@ -49,6 +64,7 @@ export class NoteService {
       { refetchQueries: [{ query: this.getNotesGQL.document }] }
     )
       .pipe(
+        errorHandler(),
         map(res => res.data.createNote)
       );
   }
@@ -59,6 +75,7 @@ export class NoteService {
       { refetchQueries: [{ query: this.getNotesGQL.document }] }
     )
       .pipe(
+        errorHandler(),
         map(res => res.data.editNote)
       );
   }
@@ -69,6 +86,7 @@ export class NoteService {
       { refetchQueries: [{ query: this.getNotesGQL.document }] }
     )
       .pipe(
+        errorHandler(),
         map(res => res.data.deleteNote)
       );
   }

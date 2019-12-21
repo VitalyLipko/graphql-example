@@ -53,13 +53,9 @@
               }
             ],
             "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "Note",
-                "ofType": null
-              }
+              "kind": "OBJECT",
+              "name": "Note",
+              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -223,13 +219,9 @@
               }
             ],
             "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "Note",
-                "ofType": null
-              }
+              "kind": "OBJECT",
+              "name": "Note",
+              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -277,9 +269,13 @@
             "description": "",
             "args": [],
             "type": {
-              "kind": "SCALAR",
-              "name": "ID",
-              "ofType": null
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "ID",
+                "ofType": null
+              }
             },
             "isDeprecated": false,
             "deprecationReason": null

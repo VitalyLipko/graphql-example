@@ -1,11 +1,18 @@
 const { notes } = require('./db');
 const uuidv4 = require('uuid/v4');
+const { ApolloError } = require('apollo-server');
 
+const noteNotFound = () => { throw new ApolloError(`Заметка не найдена!`) };
 const resolvers = {
     Query: {
         notes: () => notes,
         note(parent, args) {
-            return notes.find(note => note.id === args.id);
+            const note = notes.find(note => note.id === args.id);
+            if (!note) {
+                noteNotFound();
+            }
+
+            return note;
         }
     },
     Mutation: {
@@ -18,12 +25,15 @@ const resolvers = {
         editNote: (parent, args) => {
             const { id, title, text } = args;
             let note = notes.find(note => note.id === id);
-
-            if (title) {
-                note.title = title;
-            }
-            if (text) {
-                note.text = text;
+            if (!note) {
+                noteNotFound();
+            } else {
+                if (title) {
+                    note.title = title;
+                }
+                if (text) {
+                    note.text = text;
+                }
             }
 
             return note;
@@ -31,6 +41,9 @@ const resolvers = {
         deleteNote: (parents, args) => {
             const index = notes.findIndex(note => note.id === args.id);
             const note = notes.splice(index, 1)[0];
+            if (!note) {
+                noteNotFound();
+            }
 
             return note;
         }

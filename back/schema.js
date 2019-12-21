@@ -8,17 +8,17 @@ exports.typeDefs = gql`
   }
 
   type DeletedNote {
-    id: ID
+    id: ID!
   }
 
   type Query {
     notes: [Note!]
-    note(id: ID!): Note!
+    note(id: ID!): Note
   }
 
   type Mutation {
     createNote(title: String, text: String): Note!,
-    editNote(id: ID!, title: String, text: String): Note!,
+    editNote(id: ID!, title: String, text: String): Note,
     deleteNote(id: ID!): DeletedNote
   }
 `;
