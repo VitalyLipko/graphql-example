@@ -1,18 +1,55 @@
 <form nz-form [formGroup]="noteFormGroup">
-    <nz-form-item>
-        <nz-form-label [nzNoColon]="true">Заголовок</nz-form-label>
-        <nz-form-control>
-            <input formControlName="title" nz-input />
-        </nz-form-control>
-    </nz-form-item>
-    <nz-form-item>
-        <nz-form-label [nzNoColon]="true">Текст</nz-form-label>
-        <nz-form-control>
-            <textarea 
-                formControlName="text"
-                nz-input
-                rows="5">
-            </textarea>
-        </nz-form-control>
-    </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzNoColon]="true">Заголовок</nz-form-label>
+    <nz-form-control>
+      <input formControlName="title" nz-input />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzNoColon]="true">Иконка</nz-form-label>
+    <nz-form-control>
+      <nz-select
+        formControlName="icon"
+        nzAllowClear
+        nzShowSearch
+        nzServerSearch
+        (nzOnSearch)="onSearch($event)"
+      >
+        <ng-container
+          *ngFor="
+            let option of searchResultList;
+            index as index;
+            trackBy: trackByFn
+          "
+        >
+          <nz-option
+            [nzValue]="option.value"
+            [nzLabel]="option.label"
+            [nzCustomContent]="true"
+          >
+            <span
+              gqlIntersectionObserver
+              (visibilityChange)="onVisibilityChanged(index, $event)"
+              class="icon-item-wrapper"
+            >
+              <i
+                *ngIf="visibilityStatus[index] === intersectionStatus.Visible"
+                nz-icon
+                class="icon-item-wrapper-preview"
+                loading="lazy"
+                [nzType]="option.value"
+              ></i>
+              <span>{{ option.label }}</span>
+            </span>
+          </nz-option>
+        </ng-container>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzNoColon]="true">Текст</nz-form-label>
+    <nz-form-control>
+      <textarea formControlName="text" nz-input rows="5"></textarea>
+    </nz-form-control>
+  </nz-form-item>
 </form>

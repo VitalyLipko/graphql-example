@@ -7,22 +7,22 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { NoteCardComponent } from './components/note-card/note-card.component';
 import { EditModalComponent } from './components/edit-modal/edit-modal.component';
+import { IntersectionObserverDirective } from './directives/intersection-observer.directive';
 
 registerLocaleData(ru);
 @NgModule({
-  imports: [
-    ReactiveFormsModule,
-    NgZorroAntdModule
+  imports: [CommonModule, ReactiveFormsModule, NgZorroAntdModule],
+  declarations: [
+    NoteCardComponent,
+    EditModalComponent,
+    IntersectionObserverDirective,
   ],
-  declarations: [NoteCardComponent, EditModalComponent],
   exports: [
     CommonModule,
     NgZorroAntdModule,
     NoteCardComponent,
-    EditModalComponent
+    EditModalComponent,
   ],
-  providers: [
-    { provide: NZ_I18N, useValue: ru_RU }
-  ]
+  providers: [{ provide: NZ_I18N, useValue: ru_RU }],
 })
-export class SharedModule { }
+export class SharedModule {}
