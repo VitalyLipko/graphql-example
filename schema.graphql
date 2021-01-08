@@ -1,5 +1,5 @@
 # source: http://localhost:4000/graphql
-# timestamp: Sun Dec 15 2019 21:54:53 GMT+0700 (GMT+07:00)
+# timestamp: Fri Jan 08 2021 12:36:41 GMT+0700 (Новосибирск, стандартное время)
 
 directive @cacheControl(maxAge: Int, scope: CacheControlScope) on FIELD_DEFINITION | OBJECT | INTERFACE
 
@@ -8,14 +8,21 @@ enum CacheControlScope {
   PRIVATE
 }
 
-type DeletedNote {
+input CreateNoteInput {
+  title: String
+  text: String
+}
+
+input EditNoteInput {
   id: ID!
+  title: String
+  text: String
 }
 
 type Mutation {
-  createNote(title: String, text: String): Note!
-  editNote(id: ID!, title: String, text: String): Note
-  deleteNote(id: ID!): DeletedNote
+  createNote(note: CreateNoteInput!): Note!
+  editNote(note: EditNoteInput!): Note!
+  deleteNote(id: ID!): Boolean
 }
 
 type Note {

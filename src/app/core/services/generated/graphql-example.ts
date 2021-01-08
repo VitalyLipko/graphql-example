@@ -4,15 +4,13 @@ import * as Apollo from 'apollo-angular';
 export type Maybe<T> = T | null;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string,
-  String: string,
-  Boolean: boolean,
-  Int: number,
-  Float: number,
-  /** The `Upload` scalar type represents a file upload. */
-  Upload: any,
+  ID: string;
+  String: string;
+  Boolean: boolean;
+  Int: number;
+  Float: number;
+  Upload: any;
 };
-
 
 
 
@@ -21,52 +19,55 @@ export enum CacheControlScope {
   Private = 'PRIVATE'
 }
 
-export type DeletedNote = {
-   __typename?: 'DeletedNote',
-  id: Scalars['ID'],
+export type CreateNoteInput = {
+  title?: Maybe<Scalars['String']>;
+  text?: Maybe<Scalars['String']>;
+};
+
+export type EditNoteInput = {
+  id: Scalars['ID'];
+  title?: Maybe<Scalars['String']>;
+  text?: Maybe<Scalars['String']>;
 };
 
 export type Mutation = {
-   __typename?: 'Mutation',
-  createNote: Note,
-  editNote?: Maybe<Note>,
-  deleteNote?: Maybe<DeletedNote>,
+   __typename?: 'Mutation';
+  createNote: Note;
+  editNote: Note;
+  deleteNote?: Maybe<Scalars['Boolean']>;
 };
 
 
 export type MutationCreateNoteArgs = {
-  title?: Maybe<Scalars['String']>,
-  text?: Maybe<Scalars['String']>
+  note: CreateNoteInput;
 };
 
 
 export type MutationEditNoteArgs = {
-  id: Scalars['ID'],
-  title?: Maybe<Scalars['String']>,
-  text?: Maybe<Scalars['String']>
+  note: EditNoteInput;
 };
 
 
 export type MutationDeleteNoteArgs = {
-  id: Scalars['ID']
+  id: Scalars['ID'];
 };
 
 export type Note = {
-   __typename?: 'Note',
-  id: Scalars['ID'],
-  title?: Maybe<Scalars['String']>,
-  text?: Maybe<Scalars['String']>,
+   __typename?: 'Note';
+  id: Scalars['ID'];
+  title?: Maybe<Scalars['String']>;
+  text?: Maybe<Scalars['String']>;
 };
 
 export type Query = {
-   __typename?: 'Query',
-  notes?: Maybe<Array<Note>>,
-  note?: Maybe<Note>,
+   __typename?: 'Query';
+  notes?: Maybe<Array<Note>>;
+  note?: Maybe<Note>;
 };
 
 
 export type QueryNoteArgs = {
-  id: Scalars['ID']
+  id: Scalars['ID'];
 };
 
 
@@ -75,56 +76,50 @@ export type GetNotesQueryVariables = {};
 
 export type GetNotesQuery = (
   { __typename?: 'Query' }
-  & { notes: Maybe<Array<(
+  & { notes?: Maybe<Array<(
     { __typename?: 'Note' }
     & Pick<Note, 'id' | 'title' | 'text'>
   )>> }
 );
 
 export type GetNoteQueryVariables = {
-  id: Scalars['ID']
+  id: Scalars['ID'];
 };
 
 
 export type GetNoteQuery = (
   { __typename?: 'Query' }
-  & { note: Maybe<(
+  & { note?: Maybe<(
     { __typename?: 'Note' }
     & Pick<Note, 'id' | 'title' | 'text'>
   )> }
 );
 
 export type EditNoteMutationVariables = {
-  id: Scalars['ID'],
-  title?: Maybe<Scalars['String']>,
-  text?: Maybe<Scalars['String']>
+  note: EditNoteInput;
 };
 
 
 export type EditNoteMutation = (
   { __typename?: 'Mutation' }
-  & { editNote: Maybe<(
+  & { editNote: (
     { __typename?: 'Note' }
-    & Pick<Note, 'id' | 'title' | 'text'>
-  )> }
+    & Pick<Note, 'id'>
+  ) }
 );
 
 export type DeleteNoteMutationVariables = {
-  id: Scalars['ID']
+  id: Scalars['ID'];
 };
 
 
 export type DeleteNoteMutation = (
   { __typename?: 'Mutation' }
-  & { deleteNote: Maybe<(
-    { __typename?: 'DeletedNote' }
-    & Pick<DeletedNote, 'id'>
-  )> }
+  & Pick<Mutation, 'deleteNote'>
 );
 
 export type CreateNoteMutationVariables = {
-  title?: Maybe<Scalars['String']>,
-  text?: Maybe<Scalars['String']>
+  note: CreateNoteInput;
 };
 
 
@@ -132,10 +127,9 @@ export type CreateNoteMutation = (
   { __typename?: 'Mutation' }
   & { createNote: (
     { __typename?: 'Note' }
-    & Pick<Note, 'id' | 'title' | 'text'>
+    & Pick<Note, 'id'>
   ) }
 );
-
 
 export const GetNotesDocument = gql`
     query GetNotes {
@@ -172,11 +166,9 @@ export const GetNoteDocument = gql`
     
   }
 export const EditNoteDocument = gql`
-    mutation EditNote($id: ID!, $title: String, $text: String) {
-  editNote(id: $id, title: $title, text: $text) {
+    mutation EditNote($note: EditNoteInput!) {
+  editNote(note: $note) {
     id
-    title
-    text
   }
 }
     `;
@@ -190,9 +182,7 @@ export const EditNoteDocument = gql`
   }
 export const DeleteNoteDocument = gql`
     mutation DeleteNote($id: ID!) {
-  deleteNote(id: $id) {
-    id
-  }
+  deleteNote(id: $id)
 }
     `;
 
@@ -204,11 +194,9 @@ export const DeleteNoteDocument = gql`
     
   }
 export const CreateNoteDocument = gql`
-    mutation CreateNote($title: String, $text: String) {
-  createNote(title: $title, text: $text) {
+    mutation CreateNote($note: CreateNoteInput!) {
+  createNote(note: $note) {
     id
-    title
-    text
   }
 }
     `;

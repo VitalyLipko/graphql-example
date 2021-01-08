@@ -7,18 +7,25 @@ exports.typeDefs = gql`
     text: String
   }
 
-  type DeletedNote {
-    id: ID!
-  }
-
   type Query {
     notes: [Note!]
     note(id: ID!): Note
   }
 
   type Mutation {
-    createNote(title: String, text: String): Note!,
-    editNote(id: ID!, title: String, text: String): Note,
-    deleteNote(id: ID!): DeletedNote
+    createNote(note: CreateNoteInput!): Note!,
+    editNote(note: EditNoteInput!): Note!,
+    deleteNote(id: ID!): Boolean
+  }
+
+  input CreateNoteInput {
+    title: String
+    text: String
+  }
+
+  input EditNoteInput {
+    id: ID!
+    title: String
+    text: String
   }
 `;

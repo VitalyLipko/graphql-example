@@ -13,81 +13,77 @@ import {
   EditNoteMutationVariables,
   DeleteNoteMutationVariables,
   Note,
-  DeletedNote
 } from './generated/graphql-example';
 import { ApolloError } from 'apollo-client';
 
-function errorHandler() {
-  return (src: Observable<any>) =>
+function errorHandler<T>() {
+  return (src: Observable<T>) =>
     src.pipe(
       catchError((error: ApolloError) => {
         const messages = error.graphQLErrors
-          ? error.graphQLErrors.map(err => err.message)
+          ? error.graphQLErrors.map((err) => err.message)
           : [error.networkError.message];
 
         return throwError({ messages });
-      })
+      }),
     );
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class NoteService {
-
   constructor(
     private getNotesGQL: GetNotesGQL,
     private getNoteGQL: GetNoteGQL,
     private editNoteGQL: EditNoteGQL,
     private createNoteGQL: CreateNoteGQL,
-    private deleteNoteGQL: DeleteNoteGQL
-  ) { }
+    private deleteNoteGQL: DeleteNoteGQL,
+  ) {}
 
   getNotes(): Observable<Note[]> {
-    return this.getNotesGQL.watch().valueChanges
-      .pipe(
-        map(res => res.data.notes)
-      );
+    return this.getNotesGQL
+      .watch()
+      .valueChanges.pipe(map((res) => res.data.notes));
   }
 
   getNote(variables: GetNoteQueryVariables): Observable<Note> {
-    return this.getNoteGQL.fetch(variables)
-      .pipe(
-        errorHandler(),
-        map(res => res.data.note)
-      );
+    return this.getNoteGQL.fetch(variables).pipe(
+      errorHandler(),
+      map((res) => res.data.note),
+    );
   }
 
   createNote(variables: CreateNoteMutationVariables): Observable<Note> {
-    return this.createNoteGQL.mutate(
-      variables,
-      { refetchQueries: [{ query: this.getNotesGQL.document }] }
-    )
+    return this.createNoteGQL
+      .mutate(variables, {
+        refetchQueries: [{ query: this.getNotesGQL.document }],
+      })
       .pipe(
         errorHandler(),
-        map(res => res.data.createNote)
+        map((res) => res.data.createNote),
       );
   }
 
   editNote(variables: EditNoteMutationVariables): Observable<Note> {
-    return this.editNoteGQL.mutate(
-      variables,
-      { refetchQueries: [{ query: this.getNotesGQL.document }] }
-    )
+    return this.editNoteGQL
+      .mutate(variables, {
+        refetchQueries: [{ query: this.getNotesGQL.document }],
+      })
       .pipe(
         errorHandler(),
-        map(res => res.data.editNote)
+        map((res) => res.data.editNote),
       );
   }
 
-  deleteNote(variables: DeleteNoteMutationVariables): Observable<DeletedNote> {
-    return this.deleteNoteGQL.mutate(
-      variables,
-      { refetchQueries: [{ query: this.getNotesGQL.document }] }
-    )
+  deleteNote(variables: DeleteNoteMutationVariables): Observable<boolean> {
+    return this.deleteNoteGQL
+      .mutate(variables, {
+        refetchQueries: [{ query: this.getNotesGQL.document }],
+      })
       .pipe(
         errorHandler(),
-        map(res => res.data.deleteNote)
+        map((res) => res.data.deleteNote),
       );
   }
 }
