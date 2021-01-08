@@ -8,16 +8,14 @@ import { CoreModule } from '../core/core.module';
 import { GraphQLModule } from './graphql.module';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
     CoreModule,
     GraphQLModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

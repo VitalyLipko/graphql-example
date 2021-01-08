@@ -2,8 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import {
   NzModalService,
   NzModalRef,
-  ModalOptionsForService,
   NzMessageService,
+  ModalOptions,
 } from 'ng-zorro-antd';
 import { FormGroup } from '@angular/forms';
 import { Observable, Subject } from 'rxjs';
@@ -12,7 +12,6 @@ import { takeUntil } from 'rxjs/operators';
 import { NoteService } from 'src/app/core/services/note.service';
 import { EditModalComponent } from 'src/app/shared/components/edit-modal/edit-modal.component';
 import { Note } from 'src/app/core/services/generated/graphql-example';
-
 @Component({
   templateUrl: './main-page.component.html',
   styleUrls: ['./main-page.component.less'],
@@ -56,7 +55,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(
         (note) => {
-          const options: ModalOptionsForService<EditModalComponent> = {
+          const options: ModalOptions<EditModalComponent> = {
             nzTitle: 'Редактировать заметку',
             nzContent: EditModalComponent,
             nzComponentParams: {
@@ -91,7 +90,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
   }
 
   onCreate() {
-    const options: ModalOptionsForService<EditModalComponent> = {
+    const options: ModalOptions<EditModalComponent> = {
       nzTitle: 'Создать заметку',
       nzContent: EditModalComponent,
       nzComponentParams: {
