@@ -1,10 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import {
-  NzModalService,
-  NzModalRef,
-  NzMessageService,
-  ModalOptions,
-} from 'ng-zorro-antd';
+import { NzModalService, NzModalRef, ModalOptions } from 'ng-zorro-antd/modal';
+import { NzMessageService } from 'ng-zorro-antd/message';
 import { FormGroup } from '@angular/forms';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
