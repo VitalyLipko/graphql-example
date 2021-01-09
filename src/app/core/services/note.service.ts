@@ -1,3 +1,4 @@
+import {ApolloError} from '@apollo/client/core';
 import { Injectable } from '@angular/core';
 import { map, catchError } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
@@ -14,7 +15,7 @@ import {
   DeleteNoteMutationVariables,
   Note,
 } from './generated/graphql-example';
-import { ApolloError } from 'apollo-client';
+
 
 function errorHandler<T>() {
   return (src: Observable<T>) =>

@@ -1,11 +1,20 @@
-# source: http://localhost:4000/graphql
-# timestamp: Fri Jan 08 2021 12:36:41 GMT+0700 (Новосибирск, стандартное время)
-
 directive @cacheControl(maxAge: Int, scope: CacheControlScope) on FIELD_DEFINITION | OBJECT | INTERFACE
 
-enum CacheControlScope {
-  PUBLIC
-  PRIVATE
+type Note {
+  id: ID!
+  title: String
+  text: String
+}
+
+type Query {
+  notes: [Note!]
+  note(id: ID!): Note
+}
+
+type Mutation {
+  createNote(note: CreateNoteInput!): Note!
+  editNote(note: EditNoteInput!): Note!
+  deleteNote(id: ID!): Boolean
 }
 
 input CreateNoteInput {
@@ -19,21 +28,9 @@ input EditNoteInput {
   text: String
 }
 
-type Mutation {
-  createNote(note: CreateNoteInput!): Note!
-  editNote(note: EditNoteInput!): Note!
-  deleteNote(id: ID!): Boolean
-}
-
-type Note {
-  id: ID!
-  title: String
-  text: String
-}
-
-type Query {
-  notes: [Note!]
-  note(id: ID!): Note
+enum CacheControlScope {
+  PUBLIC
+  PRIVATE
 }
 
 """The `Upload` scalar type represents a file upload."""
